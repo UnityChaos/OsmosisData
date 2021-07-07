@@ -6,7 +6,7 @@ def export(fn, csv):
   f.write(csv)
   f.close()
 
-node = "--node=tcp://192.168.1.40:26657"
+node = "--node=tcp://192.168.1.42:26657"
 query = ["osmosisd","query"]
 
 call = lambda c: subprocess.run(c, capture_output=True)
