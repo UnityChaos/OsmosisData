@@ -22,6 +22,8 @@ def get_unclaimed(h):
 
 do_unclaimed = lambda: export("unclaimed.csv", "\n".join([str(h) + ","+get_unclaimed(h) for h in range(1000, 251000, 1000)]))
 
+do_staked_over_time = lambda: export("staked_over_time.csv", "\n".join([str(h) + "," + json.loads(call(query+["staking", "pool", node, "--output=json", "--height="+str(h)]).stdout)["bonded_tokens"] for h in range(1000,251000,1000)]))
+
 #future:
 #   trades
 #   pool weightings
@@ -31,5 +33,6 @@ do_unclaimed = lambda: export("unclaimed.csv", "\n".join([str(h) + ","+get_uncla
 if __name__ == "__main__":
   do_fees()
   do_total_staked()
+  # do_staked_over_time()
   # do_unclaimed()
 
