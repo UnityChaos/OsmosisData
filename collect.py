@@ -9,20 +9,23 @@ def export(fn, csv):
 node = "--node=tcp://192.168.1.42:26657"
 query = ["osmosisd","query"]
 
+get_height = lambda: int(json.loads(call(["osmosisd", "status", node]).stderr)["SyncInfo"]["latest_block_height"])
+
 call = lambda c: subprocess.run(c, capture_output=True)
 
 do_fees = lambda: export("fees.csv", "\n".join([x["id"] + ", " + x["poolParams"]["swapFee"] for x in json.loads(call(query+["gamm","pools", node, "--output=json"]).stdout)["pools"]]))
 
 do_total_staked = lambda: export("staked.csv", json.loads(call(query+["staking","pool",node, "--output=json"]).stdout)["bonded_tokens"])
 
-def get_unclaimed(h):
-  r = call(["osmosisd","query","claim","module-account-balance",node,"--height="+str(h), "--output=json"])
-  # print(r)
-  return json.loads(r.stdout)["moduleAccountBalance"][0]["amount"]
+get_unclaimed = lambda h: json.loads(call(["osmosisd","query","claim","module-account-balance",node,"--height="+str(h), "--output=json"]).stdout)["moduleAccountBalance"][0]["amount"]
 
-do_unclaimed = lambda: export("unclaimed.csv", "\n".join([str(h) + ","+get_unclaimed(h) for h in range(1000, 251000, 1000)]))
+do_unclaimed = lambda: export("unclaimed.csv", "\n".join([str(h) + ","+get_unclaimed(h) for h in range(1000, get_height(), 1000)]))
 
-do_staked_over_time = lambda: export("staked_over_time.csv", "\n".join([str(h) + "," + json.loads(call(query+["staking", "pool", node, "--output=json", "--height="+str(h)]).stdout)["bonded_tokens"] for h in range(1000,251000,1000)]))
+get_staked = lambda h: json.loads(call(query+["staking", "pool", node, "--output=json", "--height="+str(h)]).stdout)["bonded_tokens"]
+
+get_total = lambda h: json.loads(call(query+["bank", "total", node, "--denom=uosmo", "--height="+str(h), "--output=json"]).stdout)["amount"]
+
+do_staked_over_time = lambda: export("staked_over_time.csv", "\n".join([str(h) + "," + get_staked(h) + "," +get_total(h) for h in range(1000,get_height(),1000)]))
 
 #future:
 #   trades
@@ -33,6 +36,6 @@ do_staked_over_time = lambda: export("staked_over_time.csv", "\n".join([str(h) +
 if __name__ == "__main__":
   do_fees()
   do_total_staked()
-  # do_staked_over_time()
-  # do_unclaimed()
+  do_staked_over_time()
+  do_unclaimed()
 
