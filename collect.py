@@ -19,13 +19,13 @@ do_total_staked = lambda: export("staked.csv", json.loads(call(query+["staking",
 
 get_unclaimed = lambda h: json.loads(call(["osmosisd","query","claim","module-account-balance",node,"--height="+str(h), "--output=json"]).stdout)["moduleAccountBalance"][0]["amount"]
 
-do_unclaimed = lambda: export("unclaimed.csv", "\n".join([str(h) + ","+get_unclaimed(h) for h in range(1000, get_height(), 1000)]))
+# do_unclaimed = lambda: export("unclaimed.csv", "\n".join([str(h) + ","+get_unclaimed(h) for h in range(1000, get_height(), 1000)]))
 
 get_staked = lambda h: json.loads(call(query+["staking", "pool", node, "--output=json", "--height="+str(h)]).stdout)["bonded_tokens"]
 
 get_total = lambda h: json.loads(call(query+["bank", "total", node, "--denom=uosmo", "--height="+str(h), "--output=json"]).stdout)["amount"]
 
-do_staked_over_time = lambda: export("staked_over_time.csv", "\n".join([str(h) + "," + get_staked(h) + "," +get_total(h) for h in range(1000,get_height(),1000)]))
+do_staked_over_time = lambda: export("staked_over_time.csv", "\n".join([str(h) + "," + get_staked(h) + "," +get_total(h) + "," + get_unclaimed(h) for h in range(1000,get_height(),1000)]))
 
 #future:
 #   trades
@@ -34,8 +34,12 @@ do_staked_over_time = lambda: export("staked_over_time.csv", "\n".join([str(h) +
 #   ibc flows
 
 if __name__ == "__main__":
+  print("fees")
   do_fees()
+  print("total staked")
   do_total_staked()
+  print("stake over time")
   do_staked_over_time()
-  do_unclaimed()
+  # print("unclaimed over time")
+  # do_unclaimed()
 
