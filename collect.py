@@ -25,9 +25,13 @@ get_staked = lambda h: json.loads(call(query+["staking", "pool", node, "--output
 
 get_total = lambda h: json.loads(call(query+["bank", "total", node, "--denom=uosmo", "--height="+str(h), "--output=json"]).stdout)["amount"]
 
-do_staked_over_time = lambda: export("staked_over_time.csv", "\n".join([str(h) + "," + get_staked(h) + "," +get_total(h) + "," + get_unclaimed(h) for h in range(1000,get_height(),1000)]))
+get_locked = lambda h: json.loads(call(query+["bank","balances", "osmo1vqy8rqqlydj9wkcyvct9zxl3hc4eqgu3d7hd9k", node, "--height="+str(h), "--denom=uosmo", "--output=json"]).stdout)["amount"]
+
+do_staked_over_time = lambda: export("staked_over_time.csv", "\n".join([str(h) + "," + get_staked(h) + "," +get_total(h) + "," + get_unclaimed(h) + "," + get_locked(h) for h in range(1000,get_height(),1000)]))
 
 #future:
+
+
 #   trades
 #   pool weightings
 #   staking/lp incenive shares
