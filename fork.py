@@ -29,8 +29,6 @@ active_vals = lambda: sorted([x for x in all_vals() if is_active(x)], key=lambda
 
 did_deposit = lambda v: v["operator_address"] in dep_vals
 
-op_addrs = lambda: [v["operator_address"] for v in active_vals()]
-
 data = lambda: [", ".join([x["description"]["moniker"], x["tokens"], x["tokens"] if did_deposit(x) else "0"]) for x in active_vals()]
 
 
