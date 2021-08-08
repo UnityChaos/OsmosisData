@@ -13,13 +13,11 @@ node = "--node=tcp://192.168.1.42:26657"
 output = "--output=json"
 query = ["osmosisd","query"]
 
-prop_id = "19"
-
 depositors = lambda pid: [x["depositor"] for x in json.loads(call(query+["gov","deposits", pid, node, output]).stdout)["deposits"]]
 
 addr_to_oper = lambda addr: call(["osmosisd","debug","bech32-convert","--prefix=osmovaloper", addr]).stderr.strip().decode("utf-8")
 
-dep_vals = [addr_to_oper(x) for x in depositors(prop_id)]
+dep_vals = list(set([addr_to_oper(x) for x in depositors("19")+depositors("20")]))
 
 is_active = lambda x: x["jailed"]==False and x["status"]=="BOND_STATUS_BONDED"
 
