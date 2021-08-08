@@ -25,7 +25,7 @@ is_active = lambda x: x["jailed"]==False and x["status"]=="BOND_STATUS_BONDED"
 
 all_vals = lambda: json.loads(call(query+["staking","validators", node, output, "--limit=200"]).stdout)["validators"]
 
-active_vals = lambda: [x for x in all_vals() if is_active(x)]
+active_vals = lambda: sorted([x for x in all_vals() if is_active(x)], key=lambda v: int(v["tokens"]), reverse=True)
 
 did_deposit = lambda v: v["operator_address"] in dep_vals
 
