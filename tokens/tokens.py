@@ -6,9 +6,6 @@ api = lambda pid, rng: "https://api-osmosis.imperator.co/tokens/v1/count/"+pid+"
 
 
 def get_counts(pid, t1, t2):
-  # f = open("Pool "+pid+".csv","w")
-  # f.write("Time, "+t1+", "+t2+"\n")
-
   url = api(pid, "1mo")
 
   df = pd.read_json(url)
@@ -19,16 +16,6 @@ def get_counts(pid, t1, t2):
   f.write(r.to_csv())
   f.close()  
 
-
-  # res = requests.get(url).json()
-  # for r in res:
-  #   f.write(r["time"]+", "+str(int(r[t1]))+", "+str(int(r[t2]))+"\n")
-  # f.close()
-
-
-# output a csv file for each pool
-# row 1 should be time and name of each token
-# following rows are the data values for the pool's token liquidity
 
 if __name__ == "__main__":
   get_counts("1", "OSMO", "ATOM")
