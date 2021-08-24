@@ -1,34 +1,35 @@
 
 import requests
 import pandas as pd
+import functools
 
-api = lambda pid, rng: "https://api-osmosis.imperator.co/tokens/v1/count/"+pid+"?range="+rng
+api = lambda pid, start, end: "https://api-osmosis.imperator.co/tokens/v1/count/"+pid+"?range_start="+start+"&range_stop="+end
 
 
-def get_counts(pid, t1, t2):
-  url = api(pid, "1mo")
+DAYS_SINCE_LAUNCH = 70
 
-  df = pd.read_json(url)
+
+def load(url):
+  try:
+    df = pd.read_json(url)
+  except:
+    df = pd.DataFrame()
+  return df
+
+
+def multi_query(pid, step_size, nsteps):
+  df = functools.reduce(lambda x,y: x.append(y), reversed([load(api(pid, str(i+1)+step_size, str(i)+step_size)) for i in range(nsteps)]))
   df.index = pd.DatetimeIndex(df['time'])
-  r = df.drop(labels="time", axis=1).groupby(pd.Grouper(freq='360min')).first()
+  return df
 
+
+
+def get_counts(pid):
+  r = multi_query(pid, "d", DAYS_SINCE_LAUNCH).drop(labels="time", axis=1).groupby(pd.Grouper(freq='360min')).first()
   f = open("Pool "+pid+".csv", "w")
   f.write(r.to_csv())
   f.close()  
 
 
 if __name__ == "__main__":
-  get_counts("1", "OSMO", "ATOM")
-  get_counts("2", "OSMO", "ION")
-  get_counts("3", "OSMO", "AKT")
-  get_counts("4", "ATOM", "AKT")
-  get_counts("5", "OSMO", "DVPN")
-  get_counts("6", "ATOM", "DVPN")
-  get_counts("7", "OSMO", "IRIS")
-  get_counts("8", "ATOM", "IRIS")
-  get_counts("9", "OSMO", "CRO")
-  get_counts("10", "ATOM", "CRO")
-  get_counts("13", "ATOM", "XPRT")
-  get_counts("15", "OSMO", "XPRT")
-  get_counts("22", "ATOM", "REGEN")
-  get_counts("42", "OSMO", "REGEN")
+  [get_counts(str(pid)) for pid in [1,2,3,4,5,6,7,8,9,10,13,15,22,42,183,197]]
