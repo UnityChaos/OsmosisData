@@ -21,7 +21,7 @@ to_csv = lambda l: "\n".join([x["gauge_id"]+", "+x["weight"] for x in l])
 
 props = [2,6,9,15,18]
 
-gauges_hist = [("2021-06-19T00:00:00", {})]
+gauges_hist = [("2021-06-19T00:00:00.000000000Z", {})]
 
 for p in props:
   pj = json.loads(call(["osmosisd", "query", "gov", "proposal", str(p), node, "--output=json"]).stdout)
