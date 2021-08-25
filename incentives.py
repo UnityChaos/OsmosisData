@@ -27,9 +27,6 @@ for p in props:
 
 seq = list(reversed(gauges_hist))
 gids = seq[0][1].keys()
-# print(gids)
-# gh = {t[0] : pd.DataFrame.from_dict([t[1]]) for t in gauges_hist}
-
 
 df = pd.DataFrame(gauges_hist)
 df.index = pd.DatetimeIndex(df[0])
@@ -37,8 +34,6 @@ df.index = pd.DatetimeIndex(df[0])
 res = df.asfreq("6h",method="pad").drop(labels=0, axis=1)
 
 d = res.to_dict()[1]
-# print(len(d.keys()))
-
 
 csv = "\n".join([", ".join(["time"]+list(gids))] + [", ".join([str(t)]+[d[t].get(gid, "0") for gid in gids]) for t in d.keys()])
 
