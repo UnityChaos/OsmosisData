@@ -14,7 +14,11 @@ node = "--node=tcp://192.168.1.42:26657"
 
 props = [2,6,9,15,18]
 
-gauges_hist = [("2021-06-19T00:00:00.000000000Z", {})]
+
+strt = "2021-06-19T00:00:00.000000000Z"
+end = "2021-08-26T00:00:00.000000000Z"
+
+gauges_hist = [(strt, {})]
 
 for p in props:
   pj = json.loads(call(["osmosisd", "query", "gov", "proposal", str(p), node, "--output=json"]).stdout)
@@ -24,6 +28,7 @@ for p in props:
   cur.update(upd)
   gauges_hist.append((dt, cur))
 
+gauges_hist.append((end, gauges_hist[-1][1]))
 
 seq = list(reversed(gauges_hist))
 gids = seq[0][1].keys()
@@ -44,4 +49,4 @@ csv = "\n".join([", ".join(["time"]+list(gids))] + [", ".join([redate(t)]+[str(i
 export("incentives.csv", csv)
 
 
-export("gauge_history.csv", "\n".join([",".join(["Gauge ID"]+[s[0] for s in seq])] + [", ".join([gid] + [s[1].get(gid,"0") for s in seq]) for gid in gids]))
+# export("gauge_history.csv", "\n".join([",".join(["Gauge ID"]+[s[0] for s in seq])] + [", ".join([gid] + [s[1].get(gid,"0") for s in seq]) for gid in gids]))
