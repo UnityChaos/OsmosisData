@@ -29,7 +29,7 @@ def get_counts(pid):
   f = open("Pool "+pid+".csv", "w")
   f.write(r.to_csv())
   f.close()  
-
+  return r
 
 if __name__ == "__main__":
   [get_counts(str(pid)) for pid in [1,2,3,4,5,6,7,8,9,10,13,15,22,42,183,197]]

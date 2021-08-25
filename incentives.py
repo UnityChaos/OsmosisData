@@ -31,11 +31,15 @@ gids = seq[0][1].keys()
 df = pd.DataFrame(gauges_hist)
 df.index = pd.DatetimeIndex(df[0])
 
-res = df.asfreq("6h",method="pad").drop(labels=0, axis=1)
+res = df.asfreq("360min",method="pad").drop(labels=0, axis=1)
 
 d = res.to_dict()[1]
 
-csv = "\n".join([", ".join(["time"]+list(gids))] + [", ".join([str(t)]+[d[t].get(gid, "0") for gid in gids]) for t in d.keys()])
+totals = {t : max(1, sum([int(x) for x in d[t].values()])) for t in d.keys()}
+
+redate = lambda t: str(t).split("+")[0].replace("T"," ")
+
+csv = "\n".join([", ".join(["time"]+list(gids))] + [", ".join([redate(t)]+[str(int(d[t].get(gid, "0"))/totals[t]) for gid in gids]) for t in d.keys()])
 
 export("incentives.csv", csv)
 
