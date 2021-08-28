@@ -6,7 +6,7 @@ import functools
 api = lambda pid, start, end: "https://api-osmosis.imperator.co/tokens/v1/count/"+pid+"?range_start="+start+"&range_stop="+end
 
 
-DAYS_SINCE_LAUNCH = 70
+DAYS_SINCE_LAUNCH = 75
 
 
 def load(url):

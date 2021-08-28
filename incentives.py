@@ -12,11 +12,11 @@ def export(fn, csv):
 call = lambda c: subprocess.run(c, capture_output=True)
 node = "--node=tcp://192.168.1.42:26657"
 
-props = [2,6,9,15,18]
+props = [2,6,9,15,18,28]
 
 
 strt = "2021-06-19T00:00:00.000000000Z"
-end = "2021-08-26T00:00:00.000000000Z"
+end = "2021-08-28T00:00:00.000000000Z"
 
 gauges_hist = [(strt, {})]
 
