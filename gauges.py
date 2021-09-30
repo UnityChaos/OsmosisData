@@ -11,7 +11,7 @@ def export(fn, csv):
 
 
 call = lambda c: subprocess.run(c, capture_output=True)
-node = "--node=tcp://192.168.1.42:26657"
+node = "--node=tcp://127.0.0.1:26657"
 
 
 get_prop = lambda n: json.loads(call(["osmosisd","query","gov","proposal",n,node,"--output=json"]).stdout)["content"]["records"]
