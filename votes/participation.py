@@ -11,7 +11,7 @@ def export(fn, csv):
 
 call = lambda c: subprocess.run(c, capture_output=True)
 
-pid = 43
+pid = 42
 
 voters = {v["voter"] : v["option"] for v in json.loads(call(["osmosisd", "q", "gov", "votes", str(pid), "--output=json", "--limit=5000"]).stdout)["votes"]}
 
@@ -31,4 +31,4 @@ validators = {convert_valoper(v["operator_address"]) : int(v["tokens"]) for v in
 
 get_data = lambda v: [v,True if v in validators else False, sum(delegations[v].values()), validators[v] - sum([delegations[d].get(v,0) for d in delegations]) if v in validators else 0, voters[v]]
 
-export("participation.csv", "\n".join([",".join([str(x) for x in get_data(v)]) for v in voters]))
+export(str(pid)+".csv", "\n".join([",".join([str(x) for x in get_data(v)]) for v in voters]))
