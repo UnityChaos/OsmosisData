@@ -11,7 +11,7 @@ def export(fn, csv):
 
 call = lambda c: subprocess.run(c, capture_output=True)
 
-pid = 42
+pid = int(sys.argv[1])
 
 voters = {v["voter"] : v["option"] for v in json.loads(call(["osmosisd", "q", "gov", "votes", str(pid), "--output=json", "--limit=5000"]).stdout)["votes"]}
 
