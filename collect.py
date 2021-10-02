@@ -6,7 +6,7 @@ def export(fn, csv):
   f.write(csv)
   f.close()
 
-node = "--node=tcp://192.168.1.42:26657"
+node = "--node=tcp://127.0.0.1:26657"
 query = ["osmosisd","query"]
 
 get_height = lambda: int(json.loads(call(["osmosisd", "status", node]).stderr)["SyncInfo"]["latest_block_height"])
@@ -44,8 +44,8 @@ if __name__ == "__main__":
   do_fees()
   print("total staked")
   do_total_staked()
-  print("stake over time")
-  do_staked_over_time()
+  # print("stake over time")
+  # do_staked_over_time()
   # print("unclaimed over time")
   # do_unclaimed()
 
