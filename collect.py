@@ -42,8 +42,8 @@ do_staked_over_time = lambda: export("staked_over_time.csv", "\n".join([str(h) +
 if __name__ == "__main__":
   print("fees")
   do_fees()
-  print("total staked")
-  do_total_staked()
+  # print("total staked")
+  # do_total_staked()
   # print("stake over time")
   # do_staked_over_time()
   # print("unclaimed over time")
