@@ -21,4 +21,4 @@ to_csv = lambda l: "\n".join([x["gauge_id"]+", "+x["weight"] for x in l])
 
 if __name__ == "__main__":
   prop_id = sys.argv[1]
-  export("gauges.csv", to_csv(get_prop(prop_id)))
+  export("gauges"+prop_id+".csv", to_csv(get_prop(prop_id)))
