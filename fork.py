@@ -9,7 +9,7 @@ def export(fn, csv):
 
 call = lambda c: subprocess.run(c, capture_output=True)
 
-node = "--node=tcp://192.168.1.42:26657"
+node = "--node=tcp://127.0.0.1:26657"
 output = "--output=json"
 query = ["osmosisd","query"]
 
@@ -17,7 +17,7 @@ depositors = lambda pid: [x["depositor"] for x in json.loads(call(query+["gov","
 
 addr_to_oper = lambda addr: call(["osmosisd","debug","bech32-convert","--prefix=osmovaloper", addr]).stderr.strip().decode("utf-8")
 
-dep_vals = list(set([addr_to_oper(x) for x in depositors("19")+depositors("20")]))
+dep_vals = list(set([addr_to_oper(x) for x in depositors("103")]))
 
 is_active = lambda x: x["jailed"]==False and x["status"]=="BOND_STATUS_BONDED"
 
@@ -31,4 +31,4 @@ data = lambda: [", ".join([x["description"]["moniker"], x["tokens"], x["tokens"]
 
 
 if __name__ == "__main__":
-  export("fork_ready.csv", "\n".join(data()))
+  export("fork_ready_v6.csv", "\n".join(data()))
