@@ -1,7 +1,7 @@
 import sys
 import subprocess
 import json
-import pandas as pd
+# import pandas as pd
 
 def export(fn, csv):
   f = open(fn, "w")
