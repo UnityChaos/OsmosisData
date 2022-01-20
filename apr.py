@@ -17,7 +17,7 @@ pool_total = {denom : int(j["app_state"]["gamm"]["pools"][denom_to_pid(denom)-1]
 
 factor = {denom_to_pid(denom) : {dur/86400: sum([int(x["coins"][0]["amount"]) for x in locks if x["coins"][0]["denom"] == denom and float(x["duration"][:-1])>=dur])/pool_total[denom] for dur in [86400,604800,1209600]} for denom in denoms}
 
-get_aprs = lambda x: {d : max([float(y["apr_"+str(d)+"d"]) for y in x["apr_list"]]) for d in [1,7,14]}
+get_aprs = lambda x: {d : sum([float(y["apr_"+str(d)+"d"]) for y in x["apr_list"]]) for d in [1,7,14]}
 
 ui_aprs = {x["pool_id"] : get_aprs(x) for x in json.loads(urllib.request.urlopen(urllib.request.Request("https://api-osmosis.imperator.co/apr/v1/all")).read().decode('utf-8'))}
 
