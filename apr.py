@@ -14,7 +14,7 @@ pids = [denom_to_pid(x) for x in denoms]
 
 pool_total = {denom : int(j["app_state"]["gamm"]["pools"][denom_to_pid(denom)-1]["totalShares"]["amount"]) for denom in denoms}
 
-factor = {denom_to_pid(denom) : {dur/86400: sum([int(x["coins"][0]["amount"]) for x in locks if x["coins"][0]["denom"] == denom and float(x["duration"][:-1])>=dur])/pool_total[denom] for du>
+factor = {denom_to_pid(denom) : {dur/86400: sum([int(x["coins"][0]["amount"]) for x in locks if x["coins"][0]["denom"] == denom and float(x["duration"][:-1])>=dur])/pool_total[denom] for dur in [86400,604800,1209600]} for denom in denoms}
 
 get_aprs = lambda x: {d : sum([float(y["apr_"+str(d)+"d"]) for y in x["apr_list"]]) for d in [1,7,14]}
 
@@ -23,9 +23,9 @@ ui_aprs = {x["pool_id"] : get_aprs(x) for x in json.loads(urllib.request.urlopen
 nom_apr = {}
 for pid in ui_aprs.keys():
   b = {}
-  b[1] = ui_aprs[pid][1]/factor[pid][1]
-  b[7] = b[1] + (ui_aprs[pid][7]-ui_aprs[pid][1])/factor[pid][7]
-  b[14] = b[7] + (ui_aprs[pid][14]-ui_aprs[pid][7])/factor[pid][14]
+  b[1] = ui_aprs[pid][1]/factor.get(pid,{}).get(1,0.000000000001)
+  b[7] = b[1] + (ui_aprs[pid][7]-ui_aprs[pid][1])/factor.get(pid,{}).get(7,0.000000000001)
+  b[14] = b[7] + (ui_aprs[pid][14]-ui_aprs[pid][7])/factor.get(pid,{}).get(14,0.000000000001)
   nom_apr[pid] = b
 
 def export(fn, csv):
