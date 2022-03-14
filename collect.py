@@ -15,7 +15,7 @@ call = lambda c: subprocess.run(c, capture_output=True)
 
 do_fees = lambda: export("fees.csv", "\n".join([str(i) + ", "+get_fee(i) for i in range(1,n_pools()+1)]))
 n_pools = lambda: int(json.loads(call(query+["gamm", "num-pools", node, "--output=json"]).stdout)["numPools"])
-get_fee = lambda i: json.loads(call(query+["gamm", "pool-params", str(i), node, "--output=json"]).stdout)["params"]["swapFee"]
+get_fee = lambda i: json.loads(call(query+["gamm", "pool", str(i), node, "--output=json"]).stdout)["pool"]["poolParams"]["swapFee"]
 
 do_total_staked = lambda: export("staked.csv", json.loads(call(query+["staking","pool",node, "--output=json"]).stdout)["bonded_tokens"])
 
